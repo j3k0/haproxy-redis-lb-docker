@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 SERVERS_IPS=$1
 
@@ -10,4 +10,9 @@ for i in "${IPS[@]}"; do
   echo "server server$N $i:6379 check inter 1s" >> /usr/local/etc/haproxy/haproxy.cfg
 done
 
-haproxy -f "/usr/local/etc/haproxy/haproxy.cfg"
+
+set -e
+
+set -- "$(which haproxy-systemd-wrapper)" -p /run/haproxy.pid "$@"
+
+exec "$@"
