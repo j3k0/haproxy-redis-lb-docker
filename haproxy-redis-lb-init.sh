@@ -13,6 +13,6 @@ done
 
 set -e
 
-set -- "$(which haproxy-systemd-wrapper)" -p /run/haproxy.pid "$@"
+set -- "$(which haproxy-systemd-wrapper)" -p /run/haproxy.pid
 
 exec "$@"
