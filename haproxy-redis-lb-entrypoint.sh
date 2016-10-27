@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 
 function serverDefinitions() {
   SERVERS=$1
@@ -21,5 +20,6 @@ if [ "_$1" = "_--dry-run" ]; then
   exit 0
 fi
 
-serverDefinitions "$1" >> /usr/local/etc/haproxy/haproxy.cfg
-haproxy -f "/usr/local/etc/haproxy/haproxy.cfg"
+cp /haproxy.cfg /etc/haproxy.cfg
+serverDefinitions "$1" >> /etc/haproxy.cfg
+/docker-entrypoint.sh haproxy -f /etc/haproxy.cfg

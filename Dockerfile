@@ -2,9 +2,9 @@ FROM haproxy:alpine
 
 RUN apk add --no-cache bash
 
-COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
-COPY haproxy-redis-lb-init.sh /usr/local/bin/haproxy-redis-lb-init.sh
+COPY haproxy.cfg /haproxy.cfg
+COPY haproxy-redis-lb-entrypoint.sh /haproxy-redis-lb-entrypoint.sh
 
 EXPOSE 6379
 
-ENTRYPOINT [ "/usr/local/bin/haproxy-redis-lb-init.sh" ]
+ENTRYPOINT [ "/haproxy-redis-lb-entrypoint.sh" ]
