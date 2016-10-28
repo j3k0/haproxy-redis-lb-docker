@@ -5,7 +5,7 @@ out = []
 try:
     doc = json.load(sys.stdin)
 except Exception as e:
-    sys.stderr.write('No valid JSON data\n')
+    sys.stderr.write('ERROR: no valid JSON\n')
     sys.exit(1)
 
 if 'app' in doc and 'tasks' in doc['app']:
