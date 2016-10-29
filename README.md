@@ -5,10 +5,10 @@ Forward redis traffic to the redis master.
 #### Usage
 
 ```
-docker run -d -p 6379:6379 jeko/haproxy-redis-lb:latest "192.168.0.2:6379;192.168.0.2:6380;192.168.0.3;192.168.0.4:4021"
+docker run -d -p 6379:6379 jeko/haproxy-redis-lb:latest "192.168.0.2:6379,192.168.0.2:6380,192.168.0.3,192.168.0.4:4021"
 ```
 
-Argument is a semicolon (;) separated list of servers. Format: `host[:port];host[:port]...`
+Argument is a comma (,) separated list of servers. Format: `host[:port],host[:port]...`
 
 Each server is defined by its address (or hostname) and optional port (default: 6379).
 

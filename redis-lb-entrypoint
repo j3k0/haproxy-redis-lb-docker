@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Launch haproxy-configurator to generate /etc/haproxy.cfg
+/redis-lb-configurator "$@" > /etc/haproxy.cfg
+echo ">>>>>>>>>> FILE START: /etc/haproxy.cfg"
+cat /etc/haproxy.cfg
+echo "<<<<<<<<<< FILE END:   /etc/haproxy.cfg"
+
+# Then launch haproxy
+/docker-entrypoint.sh haproxy -f /etc/haproxy.cfg

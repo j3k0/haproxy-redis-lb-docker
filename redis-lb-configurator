@@ -39,7 +39,8 @@ EOF
 }
 
 function serverDefinitions() {
-  SERVERS=$1
+  NAME=$1
+  SERVERS=$2
   N=0
   for i in $SERVERS; do
     SERVER=(${i//:/ })
@@ -47,47 +48,19 @@ function serverDefinitions() {
     SERVER_PORT=${SERVER[1]}
     if [ -z $SERVER_PORT ]; then SERVER_PORT=6379; fi
     ((N++))
-    echo "server s$N $SERVER_HOST:$SERVER_PORT check inter 1s"
+    echo "server p$NAME-$N $SERVER_HOST:$SERVER_PORT check inter 1s"
   done
-}
-
-function serversList() {
-    for URL in $@; do
-        # echo "curl -s $URL | python app-tasks.py" 1>&2
-        curl -s $URL | python "`dirname $0`/app-tasks.py" || (echo " => URL failed loading: $URL" 1>&2)
-    done
-}
-
-function reloadConfig() {
-    echo "Reloading config..."
-    echo ">>>>>>>>>> FILE START: /etc/haproxy.cfg"
-    cat /etc/haproxy.cfg
-    echo "<<<<<<<<<< FILE END:   /etc/haproxy.cfg"
-    killall -HUP haproxy-systemd-wrapper
 }
 
 function makeConfig() {
   globalHeader
   for i in $1; do
     PORT=`echo $i | cut -d: -f1`
-    URLS=`echo $i | cut -d: -f2- | sed 's/,/ /g'`
+    SERVERS=`echo $i | cut -d: -f2- | sed 's/,/ /g'`
     serviceHeader $PORT
-    SERVERS=`serversList "$URLS" | sort | uniq`
-    serverDefinitions "$SERVERS"
+    serverDefinitions $PORT "$SERVERS"
   done
 }
 
 CONFIG="$@"
-
-# Poll and check for changes every 10 seconds
-while true; do
-  makeConfig "$CONFIG" > /etc/haproxy.cfg.new
-
-  # Reload haproxy when config has changed
-  if ! diff -q /etc/haproxy.cfg /etc/haproxy.cfg.new; then
-      cp /etc/haproxy.cfg.new /etc/haproxy.cfg
-      reloadConfig
-  fi
-  sleep 10
-done
-
+makeConfig "$CONFIG"
