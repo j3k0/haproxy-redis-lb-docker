@@ -21,7 +21,7 @@ cat << EOF
 # Specifies listening socket for accepting client connections using the default
 # REDIS TCP timeout and backend bk_redis TCP health check.
 frontend ft_redis_$PORT
-bind *:$PORT name redis
+bind $BIND_ADDRESS:$PORT name redis
 default_backend bk_redis_$PORT
 
 # Specifies the backend Redis proxy server TCP health settings
